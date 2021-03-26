@@ -26,5 +26,5 @@ debug = 1
 ## How to run/schedule this
 You could schedule this script in crontab like this:
 
-```0 1 * * * cd /mnt/usb/backup;./backup.py```
+```0 1 * * * cd /mnt/usb/backup;./home-assistant-backup.py```
 
