@@ -1,6 +1,12 @@
 # home-assistant-backup
 This script is meant to run on a server external to where you are running Home Assistant. By design, this script is meant to be run once daily. It will, via the Supervisor API, create a snapshot and download it to where you are running this script. According to configuration it will keep x amount of snapshots on Home Assistant and clean up older ones.
 
+## Installation
+Hop on your Linux og Mac (havn't tried on Windows).
+1. ```$ git clone https://github.com/scaarup/home-assistant-backup```
+2. ```$ cd home-assistant-backup```
+3. ```$ pip install -r requirements.txt```
+
 ## Configuration
 To keep things simple, configuration is done directly inside the script.
 ### host
