@@ -21,6 +21,7 @@ token = 'Bearer abfe76...'
 host = 'http://10.0.0.22:8123'
 retention = 10
 snapname = 'hassio_snapshot_full-'
+debug = 1
 ```
 ## How to run/schedule this
 You could schedule this script in crontab like this:
