@@ -13,6 +13,8 @@ In the UI, click on your profile at the bottom left. Scroll all the way down to 
 The snapshot which matches retention+1, will be deleted from Home Assistant. Set this to 7 and you will keep the last 7 snapshots on Home Assistant
 ### snapname
 Name naming prefix of the snapshots. Will be reflected in file names and snapshot names.
+### debug
+Set to 1 to enable debugging.
 ### Example configuration
 ```
 token = 'Bearer abfe76...'
