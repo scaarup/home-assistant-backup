@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Created by Søren Christian Aarup, sc@aarup.org
+# https://github.com/scaarup/home-assistant-backup
 # api ref.: https://developers.home-assistant.io/docs/api/supervisor/endpoints
 import requests,json,datetime,gzip,sys,datetime
 from datetime import timedelta, date
