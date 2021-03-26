@@ -8,7 +8,15 @@ Hop on your Linux og Mac (havn't tried on Windows).
 3. ```$ pip install -r requirements.txt```
 
 ## Configuration
-To keep things simple, configuration is done directly inside the script.
+To keep things simple, configuration is done directly inside the script. The example below is pretty self explanatory, but each parameter is documented as well.
+### Example configuration
+```
+token = 'Bearer abfe76...'
+host = 'http://10.0.0.22:8123'
+retention = 10
+snapname = 'hassio_snapshot_full-'
+debug = 1
+```
 ### host
 This is the url of you Home Assistant. Depending on where you are running this, you can use either the internal or external URL. Check those out in your UI under Configuration -> General
 ### token
@@ -21,14 +29,7 @@ The snapshot which matches retention+1, will be deleted from Home Assistant. Set
 Name naming prefix of the snapshots. Will be reflected in file names and snapshot names.
 ### debug
 Set to 1 to enable debugging.
-### Example configuration
-```
-token = 'Bearer abfe76...'
-host = 'http://10.0.0.22:8123'
-retention = 10
-snapname = 'hassio_snapshot_full-'
-debug = 1
-```
+
 ## How to run/schedule this
 You could schedule this script in crontab like this:
 
