@@ -2,16 +2,17 @@
 # Created by Søren Christian Aarup, sc@aarup.org
 # https://github.com/scaarup/home-assistant-backup
 # api ref.: https://developers.home-assistant.io/docs/api/supervisor/endpoints
+
 import requests,json,datetime,gzip,sys,datetime
 from datetime import timedelta, date
-token = 'Bearer X'
-host = 'https://<ha-hostname>'
-retention = 12 # In days, how many snapshots do you want to keep on Home Assistant (normally in /backup).
-snapname = 'hassio_snapshot_full-'
+token = 'Bearer <token>'
+host = '<url>'
+retention = 12 # In days, how many backups do you want to keep on Home Assistant (normally in /backup).
+backupname = 'hassio_backup_full-'
 date_string = datetime.datetime.now().strftime('%Y%m%d')
 _d = date.today() - timedelta(retention)
-oldestsnap = snapname+_d.strftime('%Y%m%d')+'.tar.gz'
-name = snapname+date_string+'.tar.gz'
+oldestbackup = backupname+_d.strftime('%Y%m%d')+'.tar.gz'
+name = backupname+date_string+'.tar.gz'
 debug = 1
 
 def debuglog(msg):
@@ -28,65 +29,67 @@ if not json_response['result'] == 'ok':
     sys.exit(1)
 ##
 
-def listSnapshots(name):
-    debuglog('Looping through snapshots on HA, looking for '+name)
+def listBackups(name):
+    debuglog('Looping through backups on HA, looking for '+name)
     response = requests.get(
-        host+'/api/hassio/snapshots',
+        host+'/api/hassio/backups',
         headers={'authorization': token}
     )
     json_response = response.json()
-    snapshots = json_response['data']['snapshots']
-    for snapshot in snapshots:
-        debuglog('\t'+snapshot['name']+' '+snapshot['slug'])
-        if (snapshot['name'] == name):
-            debuglog('Found our snapshot on HA:')
-            return snapshot['slug']
+    backups = json_response['data']['backups']
+    for backup in backups:
+        debuglog('\t'+backup['name']+' '+backup['slug'])
+        if (backup['name'] == name):
+            debuglog('Found our backup on HA:')
+            return backup['slug']
 
-def createSnapshotFull(name):
-    debuglog('Creating snapshot '+name)
+def createBackupFull(name):
+    debuglog('Creating backup '+name)
     response = requests.post(
-        host+'/api/hassio/snapshots/new/full',
+        host+'/api/hassio/backups/new/full',
         json={'name': name},
         headers={'authorization': token,'content-type': 'application/json'}
     )
     debuglog(str(response.status_code)+' '+str(response.content))
     json_response = response.json()
-    debuglog('Create snapshot response: '+json_response['result'])
+    debuglog('Create backup response: '+json_response['result'])
     return json_response['data']['slug']
 
-def removeSnapshot(name,slug):
-    debuglog('Removing snapshot '+name+' on server')
+def removeBackup(name,slug):
+    debuglog('Removing backup '+name+' on server')
     response = requests.delete(
-        host+'/api/hassio/snapshots/'+slug,
+        host+'/api/hassio/backups/'+slug,
         headers={'authorization': token,
         'content-type': 'application/json'}
     )
     debuglog(str(response.status_code)+' '+str(response.content))
     json_response = response.json()
 
-def getSnapshot(name,slug):
-    log('Downloading snapshot '+name)
+def getBackup(name,slug):
+    log('Downloading backup '+name)
     response = requests.get(
-        host+'/api/hassio/snapshots/'+slug+'/download',
+        host+'/api/hassio/backups/'+slug+'/download',
         headers={'authorization': token}
     )
     output = gzip.open(name, 'wb')
+#    try:
     output.write(response.content)
+#    finally:
     output.close()
     if response.status_code == 200:
         debuglog('Download ok')
     else:
         debuglog('Download response '+str(response.status_code)+' '+str(response.content))
 
-# Create the snapshot, get the slug:
-slug = createSnapshotFull(name)
-# Download the snapshot:
-getSnapshot(name,slug)
-# Remove our oldest snapshot, according to retention
+# Create the backup, get the slug:
+slug = createBackupFull(name)
+# Download the backup:
+getBackup(name,slug)
+# Remove our oldest backup, according to retention
 
-slug = listSnapshots(oldestsnap)
+slug = listBackups(oldestbackup)
 if slug is not None:
-    debuglog('Calling removeSnapshot for '+oldestsnap+' with slug '+slug)
-    removeSnapshot(name,slug)
+    debuglog('Calling removeBackup for '+oldestbackup+' with slug '+slug)
+    removeBackup(name,slug)
 else:
-    debuglog('Did not find a snapshot to delete.')
+    debuglog('Did not find a backup to delete.')
