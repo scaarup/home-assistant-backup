@@ -10,12 +10,12 @@ token = 'Bearer <token>'
 host = '<home assistant url>'
 retention = 12 # In days, how many backups do you want to keep on Home Assistant (normally in /backup).
 backupname = 'hassio_backup_full-' # Backup names and filenames are prefixed with this.
+debug = 1
 #
 date_string = datetime.datetime.now().strftime('%Y%m%d')
 _d = date.today() - timedelta(retention)
 oldestbackup = backupname+_d.strftime('%Y%m%d')+'.tar.gz'
 name = backupname+date_string+'.tar.gz'
-debug = 1
 
 def debuglog(msg):
     if debug == 1:
